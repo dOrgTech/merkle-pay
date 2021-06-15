@@ -5,10 +5,10 @@ export type { Ownable } from "./Ownable";
 export type { IERC20 } from "./IERC20";
 export type { Pausable } from "./Pausable";
 export type { ICumulativeMultiTokenMerkleDistributor } from "./ICumulativeMultiTokenMerkleDistributor";
-export type { BadgerTreeV2 } from "./BadgerTreeV2";
+export type { MerklePay } from "./MerklePay";
 
 export { Ownable__factory } from "./factories/Ownable__factory";
 export { IERC20__factory } from "./factories/IERC20__factory";
 export { Pausable__factory } from "./factories/Pausable__factory";
 export { ICumulativeMultiTokenMerkleDistributor__factory } from "./factories/ICumulativeMultiTokenMerkleDistributor__factory";
-export { BadgerTreeV2__factory } from "./factories/BadgerTreeV2__factory";
+export { MerklePay__factory } from "./factories/MerklePay__factory";

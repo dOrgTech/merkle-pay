@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.7.6;
-pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -176,13 +175,7 @@ contract MerklePay is Ownable, ICumulativeMultiTokenMerkleDistributor {
     ) internal view {
         // Verify the merkle proof.
         bytes32 node = keccak256(
-            abi.encodePacked(
-                index,
-                msg.sender,
-                cycle,
-                tokens,
-                cumulativeAmounts
-            )
+            abi.encode(index, msg.sender, cycle, tokens, cumulativeAmounts)
         );
         require(
             MerkleTree.verify(merkleProof, merkleData.root, node),

@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./MerkleTree.sol";
+import "@openzeppelin/contracts/cryptography/MerkleProof.sol";
 import "./ICumulativeMultiTokenMerkleDistributor.sol";
 
 contract MerklePay is Ownable, ICumulativeMultiTokenMerkleDistributor {
@@ -14,7 +14,7 @@ contract MerklePay is Ownable, ICumulativeMultiTokenMerkleDistributor {
     using Address for address;
 
     struct MerkleData {
-        uint256 cycle;
+        uint32 cycle;
         bytes32 root;
         bytes32 contentHash;
         uint32 blockTimestamp;
@@ -87,14 +87,13 @@ contract MerklePay is Ownable, ICumulativeMultiTokenMerkleDistributor {
     function claim(
         address[] calldata tokens,
         uint256[] calldata cumulativeAmounts,
-        uint256 index,
         uint256 cycle,
         bytes32[] calldata merkleProof,
         uint256[] calldata amountsToClaim
     ) external {
         // require(cycle <= cycle, "Invalid cycle");
         require(cycle == cycle, "Invalid cycle");
-        _verifyClaimProof(tokens, cumulativeAmounts, index, cycle, merkleProof);
+        _verifyClaimProof(tokens, cumulativeAmounts, cycle, merkleProof);
 
         bool claimedAny = false; // User must claim at least 1 token by the end of the function
 
@@ -124,9 +123,9 @@ contract MerklePay is Ownable, ICumulativeMultiTokenMerkleDistributor {
 
     /// @notice Publish a new root
     function publishRoot(
+        uint32 cycle,
         bytes32 root,
         bytes32 contentHash,
-        uint256 cycle,
         uint32 blockNumber,
         uint32 blockTimestamp
     ) external onlyOwner {
@@ -169,16 +168,15 @@ contract MerklePay is Ownable, ICumulativeMultiTokenMerkleDistributor {
     function _verifyClaimProof(
         address[] calldata tokens,
         uint256[] calldata cumulativeAmounts,
-        uint256 index,
         uint256 cycle,
         bytes32[] calldata merkleProof
     ) internal view {
         // Verify the merkle proof.
         bytes32 node = keccak256(
-            abi.encode(index, msg.sender, cycle, tokens, cumulativeAmounts)
+            abi.encode(msg.sender, cycle, tokens, cumulativeAmounts)
         );
         require(
-            MerkleTree.verify(merkleProof, merkleData.root, node),
+            MerkleProof.verify(merkleProof, merkleData.root, node),
             "Invalid proof"
         );
     }

@@ -22,7 +22,7 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface MerklePayInterface extends ethers.utils.Interface {
   functions: {
-    "claim(address[],uint256[],uint256,uint256,bytes32[],uint256[])": FunctionFragment;
+    "claim(address[],uint256[],uint256,bytes32[],uint256[])": FunctionFragment;
     "claimed(address,address)": FunctionFragment;
     "getClaimableFor(address,address[],uint256[])": FunctionFragment;
     "getClaimedFor(address,address[])": FunctionFragment;
@@ -30,7 +30,7 @@ interface MerklePayInterface extends ethers.utils.Interface {
     "isClaimAvailableFor(address,address[],uint256[])": FunctionFragment;
     "merkleData()": FunctionFragment;
     "owner()": FunctionFragment;
-    "publishRoot(bytes32,bytes32,uint256,uint32,uint32)": FunctionFragment;
+    "publishRoot(uint32,bytes32,bytes32,uint32,uint32)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "totalClaimed(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
@@ -41,7 +41,6 @@ interface MerklePayInterface extends ethers.utils.Interface {
     values: [
       string[],
       BigNumberish[],
-      BigNumberish,
       BigNumberish,
       BytesLike[],
       BigNumberish[]
@@ -74,7 +73,7 @@ interface MerklePayInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "publishRoot",
-    values: [BytesLike, BytesLike, BigNumberish, BigNumberish, BigNumberish]
+    values: [BigNumberish, BytesLike, BytesLike, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -154,17 +153,15 @@ export class MerklePay extends Contract {
     claim(
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      index: BigNumberish,
       cycle: BigNumberish,
       merkleProof: BytesLike[],
       amountsToClaim: BigNumberish[],
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "claim(address[],uint256[],uint256,uint256,bytes32[],uint256[])"(
+    "claim(address[],uint256[],uint256,bytes32[],uint256[])"(
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      index: BigNumberish,
       cycle: BigNumberish,
       merkleProof: BytesLike[],
       amountsToClaim: BigNumberish[],
@@ -236,8 +233,8 @@ export class MerklePay extends Contract {
     merkleData(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, string, number, number] & {
-        cycle: BigNumber;
+      [number, string, string, number, number] & {
+        cycle: number;
         root: string;
         contentHash: string;
         blockTimestamp: number;
@@ -248,8 +245,8 @@ export class MerklePay extends Contract {
     "merkleData()"(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, string, number, number] & {
-        cycle: BigNumber;
+      [number, string, string, number, number] & {
+        cycle: number;
         root: string;
         contentHash: string;
         blockTimestamp: number;
@@ -262,18 +259,18 @@ export class MerklePay extends Contract {
     "owner()"(overrides?: CallOverrides): Promise<[string]>;
 
     publishRoot(
+      cycle: BigNumberish,
       root: BytesLike,
       contentHash: BytesLike,
-      cycle: BigNumberish,
       blockNumber: BigNumberish,
       blockTimestamp: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "publishRoot(bytes32,bytes32,uint256,uint32,uint32)"(
+    "publishRoot(uint32,bytes32,bytes32,uint32,uint32)"(
+      cycle: BigNumberish,
       root: BytesLike,
       contentHash: BytesLike,
-      cycle: BigNumberish,
       blockNumber: BigNumberish,
       blockTimestamp: BigNumberish,
       overrides?: Overrides
@@ -304,17 +301,15 @@ export class MerklePay extends Contract {
   claim(
     tokens: string[],
     cumulativeAmounts: BigNumberish[],
-    index: BigNumberish,
     cycle: BigNumberish,
     merkleProof: BytesLike[],
     amountsToClaim: BigNumberish[],
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "claim(address[],uint256[],uint256,uint256,bytes32[],uint256[])"(
+  "claim(address[],uint256[],uint256,bytes32[],uint256[])"(
     tokens: string[],
     cumulativeAmounts: BigNumberish[],
-    index: BigNumberish,
     cycle: BigNumberish,
     merkleProof: BytesLike[],
     amountsToClaim: BigNumberish[],
@@ -386,8 +381,8 @@ export class MerklePay extends Contract {
   merkleData(
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, string, string, number, number] & {
-      cycle: BigNumber;
+    [number, string, string, number, number] & {
+      cycle: number;
       root: string;
       contentHash: string;
       blockTimestamp: number;
@@ -398,8 +393,8 @@ export class MerklePay extends Contract {
   "merkleData()"(
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, string, string, number, number] & {
-      cycle: BigNumber;
+    [number, string, string, number, number] & {
+      cycle: number;
       root: string;
       contentHash: string;
       blockTimestamp: number;
@@ -412,18 +407,18 @@ export class MerklePay extends Contract {
   "owner()"(overrides?: CallOverrides): Promise<string>;
 
   publishRoot(
+    cycle: BigNumberish,
     root: BytesLike,
     contentHash: BytesLike,
-    cycle: BigNumberish,
     blockNumber: BigNumberish,
     blockTimestamp: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "publishRoot(bytes32,bytes32,uint256,uint32,uint32)"(
+  "publishRoot(uint32,bytes32,bytes32,uint32,uint32)"(
+    cycle: BigNumberish,
     root: BytesLike,
     contentHash: BytesLike,
-    cycle: BigNumberish,
     blockNumber: BigNumberish,
     blockTimestamp: BigNumberish,
     overrides?: Overrides
@@ -454,17 +449,15 @@ export class MerklePay extends Contract {
     claim(
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      index: BigNumberish,
       cycle: BigNumberish,
       merkleProof: BytesLike[],
       amountsToClaim: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "claim(address[],uint256[],uint256,uint256,bytes32[],uint256[])"(
+    "claim(address[],uint256[],uint256,bytes32[],uint256[])"(
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      index: BigNumberish,
       cycle: BigNumberish,
       merkleProof: BytesLike[],
       amountsToClaim: BigNumberish[],
@@ -536,8 +529,8 @@ export class MerklePay extends Contract {
     merkleData(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, string, number, number] & {
-        cycle: BigNumber;
+      [number, string, string, number, number] & {
+        cycle: number;
         root: string;
         contentHash: string;
         blockTimestamp: number;
@@ -548,8 +541,8 @@ export class MerklePay extends Contract {
     "merkleData()"(
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, string, string, number, number] & {
-        cycle: BigNumber;
+      [number, string, string, number, number] & {
+        cycle: number;
         root: string;
         contentHash: string;
         blockTimestamp: number;
@@ -562,18 +555,18 @@ export class MerklePay extends Contract {
     "owner()"(overrides?: CallOverrides): Promise<string>;
 
     publishRoot(
+      cycle: BigNumberish,
       root: BytesLike,
       contentHash: BytesLike,
-      cycle: BigNumberish,
       blockNumber: BigNumberish,
       blockTimestamp: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "publishRoot(bytes32,bytes32,uint256,uint32,uint32)"(
+    "publishRoot(uint32,bytes32,bytes32,uint32,uint32)"(
+      cycle: BigNumberish,
       root: BytesLike,
       contentHash: BytesLike,
-      cycle: BigNumberish,
       blockNumber: BigNumberish,
       blockTimestamp: BigNumberish,
       overrides?: CallOverrides
@@ -627,17 +620,15 @@ export class MerklePay extends Contract {
     claim(
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      index: BigNumberish,
       cycle: BigNumberish,
       merkleProof: BytesLike[],
       amountsToClaim: BigNumberish[],
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "claim(address[],uint256[],uint256,uint256,bytes32[],uint256[])"(
+    "claim(address[],uint256[],uint256,bytes32[],uint256[])"(
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      index: BigNumberish,
       cycle: BigNumberish,
       merkleProof: BytesLike[],
       amountsToClaim: BigNumberish[],
@@ -715,18 +706,18 @@ export class MerklePay extends Contract {
     "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
 
     publishRoot(
+      cycle: BigNumberish,
       root: BytesLike,
       contentHash: BytesLike,
-      cycle: BigNumberish,
       blockNumber: BigNumberish,
       blockTimestamp: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "publishRoot(bytes32,bytes32,uint256,uint32,uint32)"(
+    "publishRoot(uint32,bytes32,bytes32,uint32,uint32)"(
+      cycle: BigNumberish,
       root: BytesLike,
       contentHash: BytesLike,
-      cycle: BigNumberish,
       blockNumber: BigNumberish,
       blockTimestamp: BigNumberish,
       overrides?: Overrides
@@ -758,17 +749,15 @@ export class MerklePay extends Contract {
     claim(
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      index: BigNumberish,
       cycle: BigNumberish,
       merkleProof: BytesLike[],
       amountsToClaim: BigNumberish[],
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "claim(address[],uint256[],uint256,uint256,bytes32[],uint256[])"(
+    "claim(address[],uint256[],uint256,bytes32[],uint256[])"(
       tokens: string[],
       cumulativeAmounts: BigNumberish[],
-      index: BigNumberish,
       cycle: BigNumberish,
       merkleProof: BytesLike[],
       amountsToClaim: BigNumberish[],
@@ -846,18 +835,18 @@ export class MerklePay extends Contract {
     "owner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     publishRoot(
+      cycle: BigNumberish,
       root: BytesLike,
       contentHash: BytesLike,
-      cycle: BigNumberish,
       blockNumber: BigNumberish,
       blockTimestamp: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "publishRoot(bytes32,bytes32,uint256,uint32,uint32)"(
+    "publishRoot(uint32,bytes32,bytes32,uint32,uint32)"(
+      cycle: BigNumberish,
       root: BytesLike,
       contentHash: BytesLike,
-      cycle: BigNumberish,
       blockNumber: BigNumberish,
       blockTimestamp: BigNumberish,
       overrides?: Overrides
